@@ -1,15 +1,10 @@
-Here’s a **professional and creative `README.md`** for your complete e-commerce website, **without emojis**, and written in a human, engaging, and polished tone—designed to impress recruiters, collaborators, and tech leads:
-
----
-
-```markdown
-# Cara - Complete E-commerce Website
+# E-commerce Website
 
 Cara is a fully responsive and modern multi-page e-commerce website built using HTML and CSS. It mimics the structure and design of real-world e-commerce platforms, with multiple pages including a home page, shop page, blog, about, contact, and cart. This project showcases clean design, intuitive UI, and a user-centered layout, making it ideal for portfolio presentation or as a front-end starter template.
 
 ## Live Preview
 
-Live demo coming soon. This project can be hosted on GitHub Pages, Netlify, or Vercel for public access.
+Live demo :
 
 ## Project Highlights
 
@@ -28,8 +23,6 @@ Live demo coming soon. This project can be hosted on GitHub Pages, Netlify, or V
 
 ## Folder Structure
 
-```
-
 cara-ecommerce/
 ├── index.html         // Home page
 ├── shop.html          // Shop/product listing
@@ -41,8 +34,6 @@ cara-ecommerce/
 ├── img/               // Images and assets
 │   └── products, features, banners, etc.
 └── README.md          // Project overview
-
-```
 
 ## How to Use
 
