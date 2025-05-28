@@ -22,7 +22,7 @@ Live demo :
 - Easy to extend with JavaScript or backend logic
 
 ## Folder Structure
-
+```
 cara-ecommerce/
 ├── index.html         // Home page
 ├── shop.html          // Shop/product listing
@@ -34,14 +34,14 @@ cara-ecommerce/
 ├── img/               // Images and assets
 │   └── products, features, banners, etc.
 └── README.md          // Project overview
+```
 
 ## How to Use
 
 1. Clone this repository:
 ```
 
-git clone [https://github.com/naga1914/E-commerce](https://github.com/naga1914/E-commerce)
-cd cara-ecommerce
+git clone https://github.com/naga1914/E-commerce
 
 ```
 
