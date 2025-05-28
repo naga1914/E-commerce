@@ -4,7 +4,7 @@ Cara is a fully responsive and modern multi-page e-commerce website built using 
 
 ## Live Preview
 
-Live demo :
+Live demo : https://e-commerce-blush-five-61.vercel.app/
 
 ## Project Highlights
 
