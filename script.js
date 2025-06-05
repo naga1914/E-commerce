@@ -106,84 +106,175 @@ document.querySelectorAll('button.normal, button.white').forEach(btn => {
 });
 
 // AI Chatbot
+// AI Chatbot
 const chatbotToggler = document.querySelector(".chatbot-toggler");
 const closeBtn = document.querySelector(".close-btn");
 const chatbox = document.querySelector(".chatbox");
 const chatInput = document.querySelector(".chat-input textarea");
 const sendChatBtn = document.querySelector(".chat-input span");
-let userMessage = null; // Variable to store user's message
+
+let userMessage = null;
 const inputInitHeight = chatInput.scrollHeight;
-// API configuration
-const API_KEY = "AIzaSyBDEOVPw1QRrtcYhRjIkD1XXPfTzHC-mBw"; // Your API key here
+
+const API_KEY = "AIzaSyBDEOVPw1QRrtcYhRjIkD1XXPfTzHC-mBw"; // Replace with your actual Gemini API key
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
 const createChatLi = (message, className) => {
-  // Create a chat <li> element with passed message and className
   const chatLi = document.createElement("li");
-  chatLi.classList.add("chat", `${className}`);
-  let chatContent = className === "outgoing" ? `<p></p>` : `<span class="material-symbols-outlined">smart_toy</span><p></p>`;
-  chatLi.innerHTML = chatContent;
+  chatLi.classList.add("chat", className);
+  chatLi.innerHTML =
+    className === "outgoing"
+      ? `<p></p>`
+      : `<span class="material-symbols-outlined">smart_toy</span><p></p>`;
   chatLi.querySelector("p").textContent = message;
-  return chatLi; // return chat <li> element
-}
+  return chatLi;
+};
+
+const createImageReply = (data) => {
+  const chatLi = document.createElement("li");
+  chatLi.classList.add("chat", "incoming");
+
+  let imageHTML = data.images.map(
+    (src) =>
+      `<img src="${src}" class="ai-recommend-img" style="width:100px; height:auto; margin:8px; border-radius:10px; cursor:pointer;" data-product="${data.text}">`
+  ).join("");
+
+  chatLi.innerHTML = `<span class="material-symbols-outlined">smart_toy</span>
+    <div>
+      <p>${data.text}</p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:8px;">
+        ${imageHTML}
+      </div>
+    </div>`;
+
+  // Add event listeners on images after insertion
+  setTimeout(() => {
+    document.querySelectorAll(".ai-recommend-img").forEach((img) => {
+      img.addEventListener("click", () => {
+        // Optional: store clicked product info for cart use
+        const product = img.getAttribute("data-product");
+        localStorage.setItem("ai-selected-product", product);
+
+        // Redirect or scroll to cart section
+        window.location.hash = "#cart";
+
+        // If you want smooth scroll:
+        /*
+        document.querySelector("#cart").scrollIntoView({ behavior: "smooth" });
+        */
+      });
+    });
+  }, 0);
+
+  return chatLi;
+};
+
 const generateResponse = async (chatElement) => {
+  const fashionReply = checkFashionKeywords(userMessage.toLowerCase());
+  if (fashionReply) {
+    chatbox.appendChild(createImageReply(fashionReply));
+    chatbox.scrollTo(0, chatbox.scrollHeight);
+    chatElement.remove(); // remove "thinking..." message
+    return;
+  }
+
   const messageElement = chatElement.querySelector("p");
-  // Define the properties and message for the API request
+
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ 
-      contents: [{ 
-        role: "user", 
-        parts: [{ text: userMessage }] 
-      }] 
+    body: JSON.stringify({
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: userMessage }],
+        },
+      ],
     }),
-  }
-  // Send POST request to API, get response and set the reponse as paragraph text
+  };
+
   try {
     const response = await fetch(API_URL, requestOptions);
     const data = await response.json();
     if (!response.ok) throw new Error(data.error.message);
-    
-    // Get the API response text and update the message element
-    messageElement.textContent = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
+    messageElement.textContent = data.candidates[0].content.parts[0].text.replace(
+      /\*\*(.*?)\*\*/g,
+      "$1"
+    );
   } catch (error) {
-    // Handle error
     messageElement.classList.add("error");
     messageElement.textContent = error.message;
   } finally {
     chatbox.scrollTo(0, chatbox.scrollHeight);
   }
-}
+};
+
 const handleChat = () => {
-  userMessage = chatInput.value.trim(); // Get user entered message and remove extra whitespace
+  userMessage = chatInput.value.trim();
   if (!userMessage) return;
-  // Clear the input textarea and set its height to default
+
   chatInput.value = "";
   chatInput.style.height = `${inputInitHeight}px`;
-  // Append the user's message to the chatbox
+
   chatbox.appendChild(createChatLi(userMessage, "outgoing"));
   chatbox.scrollTo(0, chatbox.scrollHeight);
+
   setTimeout(() => {
-    // Display "Thinking..." message while waiting for the response
     const incomingChatLi = createChatLi("Thinking...", "incoming");
     chatbox.appendChild(incomingChatLi);
     chatbox.scrollTo(0, chatbox.scrollHeight);
     generateResponse(incomingChatLi);
   }, 600);
-}
+};
+
 chatInput.addEventListener("input", () => {
-  // Adjust the height of the input textarea based on its content
   chatInput.style.height = `${inputInitHeight}px`;
   chatInput.style.height = `${chatInput.scrollHeight}px`;
 });
+
 chatInput.addEventListener("keydown", (e) => {
-  // If Enter key is pressed without Shift key and the window 
-  // width is greater than 800px, handle the chat
   if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
     e.preventDefault();
     handleChat();
   }
 });
+
 sendChatBtn.addEventListener("click", handleChat);
-closeBtn.addEventListener("click", () => document.body.classList.remove("show-chatbot"));
-chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
+
+chatbotToggler.addEventListener("click", () => {
+  document.body.classList.toggle("show-chatbot");
+  document.body.style.overflow = document.body.classList.contains("show-chatbot")
+    ? "hidden"
+    : "auto";
+});
+
+closeBtn.addEventListener("click", () => {
+  document.body.classList.remove("show-chatbot");
+  document.body.style.overflow = "auto";
+});
+
+function checkFashionKeywords(message) {
+  if (message.includes("tall") && message.includes("fair")) {
+    return {
+      text: "We recommend pastel long dresses for tall and fair skin tones.",
+      images: ["img/tall.webp", "img/fair.webp"],
+    };
+  } else if (message.includes("short") && message.includes("wheatish")) {
+    return {
+      text: "A-line and maroon dresses suit short and wheatish tones.",
+      images: ["img/short.webp", "img/wheatish.jpg"],
+    };
+  } else if (message.includes("plus size") || message.includes("curvy")) {
+    return {
+      text: "Empire waist or wrap dresses are great for plus-size and curvy shapes.",
+      images: ["img/plussize.jpg", "img/curvy.webp"],
+    };
+  } else if (message.includes("slim") || message.includes("lean")) {
+    return {
+      text: "Bodycon or structured printed dresses will look amazing on you!",
+      images: ["img/slim.jpg", "img/lean.avif"],
+    };
+  } else {
+    return null;
+  }
+}

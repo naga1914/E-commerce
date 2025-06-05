@@ -168,6 +168,10 @@ header h2 {
 .chat-input textarea:valid ~ span {
   visibility: visible;
 }
+.show-chatbot {
+  overflow: hidden;
+}
+
 @media (max-width: 490px) {
   .chatbot-toggler {
     right: 20px;
