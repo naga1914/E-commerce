@@ -661,10 +661,17 @@ const fetchGeminiResponse = (chatElement, userMessage) => {
         .then(res => res.json())
         .then(data => {
             try {
-                const geminiResponse = data.candidates[0].content.parts[0].text;
+                let geminiResponse = data.candidates[0].content.parts[0].text;
+                
+                // Remove Markdown formatting if any slips through
+                geminiResponse = geminiResponse
+                    .replace(/\*\*/g, '')  // Remove **bold**
+                    .replace(/\*/g, '')     // Remove *italics*
+                    .replace(/`/g, '');    // Remove `code` marks
+                
                 chatElement.querySelector("p").textContent = geminiResponse;
             } catch {
-                chatElement.querySelector("p").textContent = "I couldn't find specific fashion advice for that. Could you try rephrasing or asking about something else?";
+                chatElement.querySelector("p").textContent = "I couldn't find specific fashion advice for that. Could you try rephrasing?";
             }
         })
         .catch(() => {
