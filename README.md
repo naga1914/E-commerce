@@ -31,7 +31,7 @@ No more endless scrolling - just tell my AI what you like, and **BAM!**  It serv
 - **Hosted on**: Vercel
 
 ##  **Try It Out!**  
- **Live Demo**: [https://e-commerce-with-ai-fashion-chatbot.vercel.app/index.html](#)  
+ 👉 **Live Demo**: [FashionGenie Store](https://e-commerce-with-ai-fashion-chatbot.vercel.app/index.html)
 
 Or run locally:  
 ```bash
