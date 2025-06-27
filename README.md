@@ -32,6 +32,7 @@ No more endless scrolling - just tell my AI what you like, and **BAM!**  It serv
 
 ##  **Try It Out!**  
  👉 **Live Demo**: [FashionGenie Store](https://e-commerce-with-ai-fashion-chatbot.vercel.app/index.html)
+## **video** : https://drive.google.com/file/d/11xsXt5iRObKodjG9crSM3p5bCLyKwyhR/view?usp=sharing
 
 Or run locally:  
 ```bash
